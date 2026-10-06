@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Knowledge Atlas</title>
+  <meta name="description" content="A personal map of ideas, questions and intellectual connections.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">PERSONAL KNOWLEDGE GRAPH</div>
+        <h1>Knowledge Atlas</h1>
+        <p>Explore what you know. Follow what you're curious about. Find the connections.</p>
+      </div>
+      <div class="top-actions">
+        <button class="ghost" id="zoomOut" aria-label="Zoom out">−</button>
+        <button class="ghost reset" id="zoomReset">Reset view</button>
+        <button class="ghost" id="zoomIn" aria-label="Zoom in">+</button>
+        <button class="primary" id="addNode">+ Add idea</button>
+      </div>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <div class="workspace">
+      <section class="map-panel">
+        <div class="map-toolbar">
+          <div class="search-wrap">
+            <span>⌕</span>
+            <input id="search" placeholder="Search ideas, people, movements…" autocomplete="off">
+          </div>
+          <select id="categoryFilter" aria-label="Filter by territory"><option value="all">All territories</option></select>
+          <button class="ghost fit" id="fitView">Center map</button>
+        </div>
+
+        <div class="map-hint">
+          <span><b>Scroll</b> to zoom</span>
+          <span><b>Drag</b> to move</span>
+          <span><b>Click</b> an idea to explore it</span>
+        </div>
+
+        <div id="graph" class="graph" aria-label="Interactive knowledge map"></div>
+
+        <div class="map-footer">
+          <div class="legend">
+            <span><i class="dot curious"></i> curious</span>
+            <span><i class="dot exploring"></i> exploring</span>
+            <span><i class="dot familiar"></i> familiar</span>
+            <span><i class="dot strong"></i> strong</span>
+            <span><i class="dot deep"></i> deep</span>
+          </div>
+          <button class="text-button" id="zoomOutAll">↙ Zoom out to the whole atlas</button>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="card explore-card">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">NEXT DIRECTIONS</span>
+              <h2>Where could you go next?</h2>
+            </div>
+            <button class="icon-button" id="refreshSuggestions" aria-label="Refresh suggestions">↻</button>
+          </div>
+          <div id="suggestions"></div>
+          <button class="wide-button" id="rabbitHole">↗ Take me down a rabbit hole</button>
+        </section>
+
+        <section class="card inspector-card" id="inspector">
+          <div class="empty">
+            <div class="empty-icon">✦</div>
+            <strong>Choose an idea</strong>
+            <p>Click something on the map to see what you've mapped around it.</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <dialog id="nodeDialog">
+      <form method="dialog" id="nodeForm">
+        <div class="dialog-head">
+          <div>
+            <span class="eyebrow">GROW THE ATLAS</span>
+            <h2>Add an idea</h2>
+          </div>
+          <button class="close" value="cancel">×</button>
+        </div>
+        <label>Name<input id="nodeName" required maxlength="100" placeholder="e.g. Phenomenology"></label>
+        <label>Territory<input id="nodeCategory" required maxlength="60" placeholder="e.g. Philosophy"></label>
+        <label>Place it near<select id="nodeParent"></select></label>
+        <label>How well do you know it?
+          <select id="nodeLevel">
+            <option value="1">Curious</option>
+            <option value="2">Exploring</option>
+            <option value="3">Familiar</option>
+            <option value="4">Strong</option>
+            <option value="5">Deep</option>
+          </select>
+        </label>
+        <label>What do you currently think you know?<textarea id="nodeDescription" rows="4" placeholder="A rough note is enough. You can refine it later."></textarea></label>
+        <button class="primary submit" value="default">Add to atlas</button>
+      </form>
+    </dialog>
+
+    <dialog id="connectionDialog">
+      <form method="dialog" id="connectionForm">
+        <div class="dialog-head">
+          <div>
+            <span class="eyebrow">MAKE A CONNECTION</span>
+            <h2>Link two ideas</h2>
+          </div>
+          <button class="close" value="cancel">×</button>
+        </div>
+        <label>From<select id="edgeSource"></select></label>
+        <label>To<select id="edgeTarget"></select></label>
+        <label>Relationship
+          <select id="edgeType">
+            <option>related</option>
+            <option>influences</option>
+            <option>contrasts</option>
+            <option>builds on</option>
+            <option>applies to</option>
+            <option>explains</option>
+            <option>example of</option>
+          </select>
+        </label>
+        <button class="primary submit" value="default">Create connection</button>
+      </form>
+    </dialog>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="config.js" onerror="window.KNOWLEDGE_CONFIG=null"></script>
+  <script src="supabase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
